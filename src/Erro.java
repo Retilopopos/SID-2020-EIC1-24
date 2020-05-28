@@ -1,14 +1,20 @@
 
 public class Erro {
-
+	
+	String id;
 	private MediçãoSensor medição;
 	private TipoErro tipo;
 
-	public Erro(MediçãoSensor medição, String tipo) {
+	public Erro(MediçãoSensor medição, String tipo, String id) {
 		this.medição = medição;
 		this.tipo = TipoErro.valueOf(tipo);
+		this.id = id;
 	}
-
+	
+	public String getId() {
+		return id;
+	}
+	
 	public TipoErro getTipo() {
 		return tipo;
 	}
@@ -24,9 +30,9 @@ public class Erro {
 	}
 	
 	public String toQueryErroSintaxe() {
-		return "INSERT INTO `erro`(`ValorMedição`, `TipoSensor`, `DataHoraErro`, `CódigoErro`) VALUES (\""
+		return "INSERT INTO `erro`(`ValorMedição`, `TipoSensor`, `DataHoraErro`, `CódigoErro`, `IDMongo`) VALUES (\""
 				+ medição.getValorErr() + "\", \"" + medição.getTipo() + "\", \"" + medição.getDataHora() + "\", \""
-				+ this.getTipo() + "\")";
+				+ this.getTipo() + "\", \"" +this.getId() + "\")";
 	}
 
 }

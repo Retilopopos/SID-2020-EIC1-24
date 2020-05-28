@@ -113,6 +113,7 @@ public class MongoToMysql {
 
 			String dat = result.getString("dat");
 			String tim = result.getString("tim");
+			String id = result.getString("_id");
 
 			MediçãoSensor tmp = null;
 			MediçãoSensor hum = null;
@@ -124,8 +125,8 @@ public class MongoToMysql {
 			} catch (Exception e) {
 				try {
 					String newTmpErr = result.getString("tmp");
-					tmp = new MediçãoSensor(newTmpErr, "tmp", dat, tim);
-					mysqlSt.executeUpdate(new Erro(tmp, "ERR01").toQueryErroSintaxe());
+					tmp = new MediçãoSensor(newTmpErr, "tmp", dat, tim, id);
+					mysqlSt.executeUpdate(new Erro(tmp, "ERR01", id).toQueryErroSintaxe());
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
@@ -135,8 +136,8 @@ public class MongoToMysql {
 			} catch (Exception e) {
 				try {
 					String newHumErr = result.getString("hum");
-					hum = new MediçãoSensor(newHumErr, "hum", dat, tim);
-					mysqlSt.executeUpdate(new Erro(hum, "ERR02").toQueryErroSintaxe());
+					hum = new MediçãoSensor(newHumErr, "hum", dat, tim, id);
+					mysqlSt.executeUpdate(new Erro(hum, "ERR02", id).toQueryErroSintaxe());
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
@@ -146,8 +147,8 @@ public class MongoToMysql {
 			} catch (Exception e) {
 				try {
 					String newMovErr = result.getString("mov");
-					mov = new MediçãoSensor(newMovErr, "mov", dat, tim);
-					mysqlSt.executeUpdate(new Erro(mov, "ERR03").toQueryErroSintaxe());
+					mov = new MediçãoSensor(newMovErr, "mov", dat, tim, id);
+					mysqlSt.executeUpdate(new Erro(mov, "ERR03", id).toQueryErroSintaxe());
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
@@ -157,15 +158,15 @@ public class MongoToMysql {
 			} catch (Exception e) {
 				try {
 					String newLumErr = result.getString("lum");
-					lum = new MediçãoSensor(newLumErr, "lum", dat, tim);
-					mysqlSt.executeUpdate(new Erro(lum, "ERR04").toQueryErroSintaxe());
+					lum = new MediçãoSensor(newLumErr, "lum", dat, tim, id);
+					mysqlSt.executeUpdate(new Erro(lum, "ERR04", id).toQueryErroSintaxe());
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
 			}
 
 			if (newTmp != -1.0) {
-				tmp = new MediçãoSensor(newTmp, "tmp", dat, tim);
+				tmp = new MediçãoSensor(newTmp, "tmp", dat, tim, id);
 
 				Double variacao = Math.abs(1 - (Math.max(oldTmp, newTmp) / Math.min(oldTmp, newTmp)));
 				if ((oldTmp == -1.0 || variacao < variacaoValorErro)|| nErrosConsecutivosTemperatura >= maximoErrosPermitidos) {
@@ -175,7 +176,7 @@ public class MongoToMysql {
 					if (nErrosConsecutivosTemperatura < maximoErrosPermitidos) {
 						while (!waitingList.isEmpty()) {
 							try {
-								mysqlSt.executeUpdate(new Erro(waitingList.remove(), "ERR05").toQuery());
+								mysqlSt.executeUpdate(new Erro(waitingList.remove(), "ERR05", id).toQuery());
 							} catch (SQLException e) {
 								e.printStackTrace();
 							}
@@ -208,7 +209,7 @@ public class MongoToMysql {
 
 			}
 			if (newHum != -1.0) {
-				hum = new MediçãoSensor(newHum, "hum", dat, tim);
+				hum = new MediçãoSensor(newHum, "hum", dat, tim, id);
 
 				Double variacao = Math.abs(1 - (Math.max(oldHum, newHum) / Math.min(oldHum, newHum)));
 				if ((oldHum == -1.0 || variacao < variacaoValorErro)
@@ -219,7 +220,7 @@ public class MongoToMysql {
 					if (nErrosConsecutivosDeHumidade < maximoErrosPermitidos) {
 						while (!waitingList.isEmpty()) {
 							try {
-								mysqlSt.executeUpdate(new Erro(waitingList.remove(), "ERR06").toQuery());
+								mysqlSt.executeUpdate(new Erro(waitingList.remove(), "ERR06", id).toQuery());
 							} catch (SQLException e) {
 								e.printStackTrace();
 							}
@@ -251,7 +252,7 @@ public class MongoToMysql {
 			}
 
 			if (newMov == 0.0 || newMov == 1.0) {
-				mov = new MediçãoSensor(newMov, "mov", dat, tim);
+				mov = new MediçãoSensor(newMov, "mov", dat, tim, id);
 				try {
 					mysqlSP = mysqlConn.prepareCall(mov.toQuerySP());
 					mysqlSP.execute();
@@ -259,16 +260,16 @@ public class MongoToMysql {
 					e.printStackTrace();
 				}
 			} else {
-				mov = new MediçãoSensor(newMov, "mov", dat, tim);
+				mov = new MediçãoSensor(newMov, "mov", dat, tim, id);
 				try {
-					mysqlSt.executeUpdate(new Erro(mov, "ERR03").toQuery());
+					mysqlSt.executeUpdate(new Erro(mov, "ERR03", id).toQuery());
 					mysqlSP.execute();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			}
 			if (newLum >= 0.0) {
-				lum = new MediçãoSensor(newLum, "lum", dat, tim);
+				lum = new MediçãoSensor(newLum, "lum", dat, tim, id);
 				try {
 					mysqlSP = mysqlConn.prepareCall(lum.toQuerySP());
 					mysqlSP.execute();
@@ -276,9 +277,9 @@ public class MongoToMysql {
 					e.printStackTrace();
 				}
 			} else if (newLum != -1.0){
-				lum = new MediçãoSensor(newLum, "lum", dat, tim);
+				lum = new MediçãoSensor(newLum, "lum", dat, tim, id);
 				try {
-					mysqlSt.executeUpdate(new Erro(lum, "ERR04").toQuery());
+					mysqlSt.executeUpdate(new Erro(lum, "ERR04", id).toQuery());
 					mysqlSP.execute();
 				} catch (SQLException e) {
 					e.printStackTrace();
