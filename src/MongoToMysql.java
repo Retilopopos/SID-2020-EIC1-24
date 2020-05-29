@@ -9,6 +9,7 @@ import java.util.Queue;
 import java.util.TimeZone;
 
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -105,7 +106,7 @@ public class MongoToMysql {
 		MongoCursor<ChangeStreamDocument<Document>> cursor = mongoCollection.watch().iterator();
 		while (cursor.hasNext()) {
 			Document result = cursor.next().getFullDocument();
-
+			System.out.println(result);
 			Double newTmp = -1.0;
 			Double newHum = -1.0;
 			Double newLum = -1.0;
@@ -113,7 +114,8 @@ public class MongoToMysql {
 
 			String dat = result.getString("dat");
 			String tim = result.getString("tim");
-			String id = result.getString("_id");
+			ObjectId objId = result.getObjectId("_id");
+			String id = objId.toString();
 
 			MediçãoSensor tmp = null;
 			MediçãoSensor hum = null;

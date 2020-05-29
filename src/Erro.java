@@ -24,13 +24,13 @@ public class Erro {
 	}
 
 	public String toQuery() {
-		return "INSERT INTO `erro`(`ValorMedição`, `TipoSensor`, `DataHoraErro`, `CódigoErro`) VALUES ("
+		return "INSERT INTO `erro`(`ValorMedição`, `TipoSensor`, `DataHoraErro`, `CódigoErro`, `Mongo_ID`) VALUES ("
 				+ medição.getValor() + ", \"" + medição.getTipo() + "\", \"" + medição.getDataHora() + "\", \""
-				+ this.getTipo() + "\")";
+				+ this.getTipo() + "\", \"" +this.getId() + "\")";
 	}
 	
 	public String toQueryErroSintaxe() {
-		return "INSERT INTO `erro`(`ValorMedição`, `TipoSensor`, `DataHoraErro`, `CódigoErro`, `IDMongo`) VALUES (\""
+		return "INSERT INTO `erro`(`ValorMedição`, `TipoSensor`, `DataHoraErro`, `CódigoErro`, `Mongo_ID`) VALUES (\""
 				+ medição.getValorErr() + "\", \"" + medição.getTipo() + "\", \"" + medição.getDataHora() + "\", \""
 				+ this.getTipo() + "\", \"" +this.getId() + "\")";
 	}

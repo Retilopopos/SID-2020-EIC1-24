@@ -54,7 +54,7 @@ public class MediçãoSensor {
 	}
 	
 	public String toQuerySP() {
-		return "call inserirMedições(" +  this.getValor() + ",\"" +  this.getTipo() + "\",\"" + this.getDataHora() + "\",\"" + this.id +"\")";
+		return "call inserirMedições(" +  this.getValor() + ",\"" +  this.getTipo() + "\",\"" + this.getDataHora() + "\",\"" + this.getId() +"\")";
 	}
 	
 	public String toString() {
