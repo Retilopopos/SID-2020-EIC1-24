@@ -45,46 +45,48 @@ public class SimulateSensor implements MqttCallback {
 	public void writeSensor() {
 		LocalDate.now();
 		LocalTime.now();
+		long t = System.currentTimeMillis();
+		long end = t + 58000;
 		while (true) {
-			double d = 18.0;
-			while (d < 50.0) {
-				final String string = "{\"tmp\":\"" + d + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
-						+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
-						+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
-						+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
-				d += 0.5;
-				try {
-					Thread.sleep(2000L);
-				} catch (InterruptedException ex) {
-				}
-				this.publishSensor(string);
-			}
-			int i = 1;
-			while (i < 10) {
-				final String string2 = "{\"tmp\":\"" + d + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
-						+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
-						+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
-						+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
-				++i;
-				try {
-					Thread.sleep(2000L);
-				} catch (InterruptedException ex2) {
-				}
-				this.publishSensor(string2);
-			}
-			while (d > 18.0) {
-				final String string3 = "{\"tmp\":\"" + d + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
-						+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
-						+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
-						+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
-				d -= 1.5;
-				try {
-					Thread.sleep(2000L);
-				} catch (InterruptedException ex3) {
-				}
-				this.publishSensor(string3);
-			}
-			final String string4 = "{\"tmp\":\"" + 18.0 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
+//			double d = 18.0;
+//			while (d < 50.0) {
+//				final String string = "{\"tmp\":\"" + d + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
+//						+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
+//						+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
+//						+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
+//				d += 0.5;
+//				try {
+//					Thread.sleep(2000L);
+//				} catch (InterruptedException ex) {
+//				}
+//				this.publishSensor(string);
+//			}
+//			int i = 1;
+//			while (i < 10) {
+//				final String string2 = "{\"tmp\":\"" + d + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
+//						+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
+//						+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
+//						+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
+//				++i;
+//				try {
+//					Thread.sleep(2000L);
+//				} catch (InterruptedException ex2) {
+//				}
+//				this.publishSensor(string2);
+//			}
+//			while (d > 18.0) {
+//				final String string3 = "{\"tmp\":\"" + d + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
+//						+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
+//						+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
+//						+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
+//				d -= 1.5;
+//				try {
+//					Thread.sleep(2000L);
+//				} catch (InterruptedException ex3) {
+//				}
+//				this.publishSensor(string3);
+//			}
+			final String string4 = "{\"tmp\":\"" + 49.8 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
 					+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
 					+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
 					+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
@@ -93,7 +95,7 @@ public class SimulateSensor implements MqttCallback {
 			} catch (InterruptedException ex4) {
 			}
 			this.publishSensor(string4);
-			final String string5 = "{\"tmp\":\"" + 18.0 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
+			final String string5 = "{\"tmp\":\"" + 50.0 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
 					+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
 					+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
 					+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
@@ -102,16 +104,16 @@ public class SimulateSensor implements MqttCallback {
 			} catch (InterruptedException ex5) {
 			}
 			this.publishSensor(string5);
-			final String string6 = "{\"tmp\":\"" + 18.0 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
+			final String string6 = "{\"tmp\":\"" + 49.8 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
 					+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
 					+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
 					+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
 			try {
 				Thread.sleep(2000L);
-			} catch (InterruptedException ex6) {
+			} catch (InterruptedException ex6) {	
 			}
 			this.publishSensor(string6);
-			final String string7 = "{\"tmp\":\"" + 50.0 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
+			final String string7 = "{\"tmp\":\"" + 49.7 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
 					+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
 					+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
 					+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
@@ -120,7 +122,7 @@ public class SimulateSensor implements MqttCallback {
 			} catch (InterruptedException ex7) {
 			}
 			this.publishSensor(string7);
-			final String string8 = "{\"tmp\":\"" + 18.0 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
+			final String string8 = "{\"tmp\":\"" + 49.5 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
 					+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
 					+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
 					+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
@@ -129,69 +131,69 @@ public class SimulateSensor implements MqttCallback {
 			} catch (InterruptedException ex8) {
 			}
 			this.publishSensor(string8);
-			final String string9 = "{\"tmp\":\"" + 18.0 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
+			final String string9 = "{\"tmp\":\"" + 48.0 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
 					+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
 					+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
-					+ "\",\"mov\":\"" + 1 + "\",\"sens\":\"eth\"}";
+					+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
 			try {
 				Thread.sleep(2000L);
 			} catch (InterruptedException ex9) {
 			}
 			this.publishSensor(string9);
-			final String string10 = "{\"tmp\":\"" + 18.0 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
-					+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
-					+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
-					+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
-			try {
-				Thread.sleep(2000L);
-			} catch (InterruptedException ex10) {
-			}
-			this.publishSensor(string10);
-			final String string11 = "{\"tmp\":\"" + 50.0 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
-					+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
-					+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
-					+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
-			try {
-				Thread.sleep(2000L);
-			} catch (InterruptedException ex11) {
-			}
-			this.publishSensor(string11);
-			final String string12 = "{\"tmp\":\"" + 50.0 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
-					+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
-					+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
-					+ "\",\"mov\":\"x\",\"sens\":\"eth\"}";
-			try {
-				Thread.sleep(2000L);
-			} catch (InterruptedException ex12) {
-			}
-			this.publishSensor(string12);
-			final String string13 = "{\"tmp\":\"" + 50.0 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
-					+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
-					+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + -20
-					+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
-			try {
-				Thread.sleep(2000L);
-			} catch (InterruptedException ex13) {
-			}
-			this.publishSensor(string13);
-			final String string14 = "{\"tmp\":\"" + 50.0 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
-					+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
-					+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
-					+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
-			try {
-				Thread.sleep(2000L);
-			} catch (InterruptedException ex14) {
-			}
-			this.publishSensor(string14);
-			final String string15 = "{\"tmp\":\"" + 18.0 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
-					+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
-					+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
-					+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
-			try {
-				Thread.sleep(2000L);
-			} catch (InterruptedException ex15) {
-			}
-			this.publishSensor(string15);
+//			final String string10 = "{\"tmp\":\"" + 18.0 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
+//					+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
+//					+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
+//					+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
+//			try {
+//				Thread.sleep(2000L);
+//			} catch (InterruptedException ex10) {
+//			}
+//			this.publishSensor(string10);
+//			final String string11 = "{\"tmp\":\"" + 18.0 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
+//					+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
+//					+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
+//					+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
+//			try {
+//				Thread.sleep(2000L);
+//			} catch (InterruptedException ex11) {
+//			}
+//			this.publishSensor(string11);
+//			final String string12 = "{\"tmp\":\"" + 18.0 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
+//					+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
+//					+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
+//					+ "\",\"mov\":\"x\",\"sens\":\"eth\"}";
+//			try {
+//				Thread.sleep(2000L);
+//			} catch (InterruptedException ex12) {
+//			}
+//			this.publishSensor(string12);
+//			final String string13 = "{\"tmp\":\"" + 18.0 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
+//					+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
+//					+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + -20
+//					+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
+//			try {
+//				Thread.sleep(2000L);
+//			} catch (InterruptedException ex13) {
+//			}
+//			this.publishSensor(string13);
+//			final String string14 = "{\"tmp\":\"" + 18.0 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
+//					+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
+//					+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
+//					+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
+//			try {
+//				Thread.sleep(2000L);
+//			} catch (InterruptedException ex14) {
+//			}
+//			this.publishSensor(string14);
+//			final String string15 = "{\"tmp\":\"" + 18.0 + "\",\"hum\":\"" + 35.0 + "\",\"dat\":\""
+//					+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\",\"tim\":\""
+//					+ LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "\",\"cell\":\"" + 20
+//					+ "\",\"mov\":\"" + 0 + "\",\"sens\":\"eth\"}";
+//			try {
+//				Thread.sleep(2000L);
+//			} catch (InterruptedException ex15) {
+//			}
+//			this.publishSensor(string15);
 		}
 	}
 

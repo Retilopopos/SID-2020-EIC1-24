@@ -106,7 +106,6 @@ public class MongoToMysql {
 		MongoCursor<ChangeStreamDocument<Document>> cursor = mongoCollection.watch().iterator();
 		while (cursor.hasNext()) {
 			Document result = cursor.next().getFullDocument();
-			System.out.println(result);
 			Double newTmp = -1.0;
 			Double newHum = -1.0;
 			Double newLum = -1.0;

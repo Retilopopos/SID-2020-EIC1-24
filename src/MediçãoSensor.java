@@ -35,7 +35,7 @@ public class MediçãoSensor {
 	}
 	
 	public String getValorErr() {
-		return valorErr != null? valorErr.substring(0, 9):"";
+		return valorErr;
 	}
 	
 	public TipoSensor getTipo() {
