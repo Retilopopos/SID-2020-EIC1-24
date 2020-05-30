@@ -21,6 +21,8 @@ import com.mongodb.client.model.changestream.ChangeStreamDocument;
 public class MongoToMysql {
 
 	Queue<MediçãoSensor> waitingList = new LinkedList<MediçãoSensor>();
+	
+	LinkedList<Object> insertList = new LinkedList<Object>();
 
 	String mongo_host = "mongodb://localhost:26017,localhost:25017,localhost:23017";
 	String mongo_database = "Museu";
@@ -89,8 +91,19 @@ public class MongoToMysql {
 			mysqlConn = DriverManager.getConnection(
 					"jdbc:mysql://localhost/g24_origem?serverTimezone=" + TimeZone.getDefault().getID(), "root", "");
 			mysqlSt = mysqlConn.createStatement();
+			while(!insertList.isEmpty()) {
+				Object first = insertList.getFirst();
+				if(first instanceof MediçãoSensor) {
+					mysqlSP = mysqlConn.prepareCall(((MediçãoSensor)first).toQuerySP());
+					mysqlSP.execute();
+				} else if(first instanceof Erro) {
+					mysqlSt.executeUpdate(((Erro)first).toQuery());
+					mysqlSP.execute();
+				}
+				insertList.removeFirst();
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Tentou ligar mas não conseguiu!");
 		}
 	}
 
@@ -99,7 +112,9 @@ public class MongoToMysql {
 		mongoDatabase = mongoClient.getDatabase(mongo_database);
 		mongoCollection = mongoDatabase.getCollection(mongo_collection);
 	}
-
+	
+	
+	
 	@SuppressWarnings("unused")
 	private void watchForInserts() {
 
@@ -124,45 +139,57 @@ public class MongoToMysql {
 			try {
 				newTmp = Double.parseDouble(result.getString("tmp"));
 			} catch (Exception e) {
+				Erro erro = null;
 				try {
 					String newTmpErr = result.getString("tmp");
 					tmp = new MediçãoSensor(newTmpErr, "tmp", dat, tim, id);
-					mysqlSt.executeUpdate(new Erro(tmp, "ERR01", id).toQueryErroSintaxe());
+					erro = new Erro(tmp, "ERR01", id); 
+					mysqlSt.executeUpdate(erro.toQuery());
 				} catch (SQLException e1) {
-					e1.printStackTrace();
+					insertList.add(erro);
+					connectToMysql();
 				}
 			}
 			try {
 				newHum = Double.parseDouble(result.getString("hum"));
 			} catch (Exception e) {
+				Erro erro = null;
 				try {
 					String newHumErr = result.getString("hum");
 					hum = new MediçãoSensor(newHumErr, "hum", dat, tim, id);
-					mysqlSt.executeUpdate(new Erro(hum, "ERR02", id).toQueryErroSintaxe());
+					erro =new Erro(hum, "ERR02", id); 
+					mysqlSt.executeUpdate(erro.toQuery());
 				} catch (SQLException e1) {
-					e1.printStackTrace();
+					insertList.add(erro);
+					connectToMysql();
 				}
 			}
 			try {
 				newMov = Double.parseDouble(result.getString("mov"));
 			} catch (Exception e) {
+				Erro erro = null;
 				try {
 					String newMovErr = result.getString("mov");
 					mov = new MediçãoSensor(newMovErr, "mov", dat, tim, id);
-					mysqlSt.executeUpdate(new Erro(mov, "ERR03", id).toQueryErroSintaxe());
+					erro = new Erro(mov, "ERR03", id);
+					mysqlSt.executeUpdate(erro.toQuery());
 				} catch (SQLException e1) {
-					e1.printStackTrace();
+					insertList.add(erro);
+					connectToMysql();
 				}
 			}
 			try {
 				newLum = Double.parseDouble(result.getString("cell"));
 			} catch (Exception e) {
+				Erro erro = null;
 				try {
-					String newLumErr = result.getString("lum");
+					String newLumErr = result.getString("cell");
 					lum = new MediçãoSensor(newLumErr, "lum", dat, tim, id);
-					mysqlSt.executeUpdate(new Erro(lum, "ERR04", id).toQueryErroSintaxe());
-				} catch (SQLException e1) {
-					e1.printStackTrace();
+					erro = new Erro(lum, "ERR04", id);
+					mysqlSt.executeUpdate(erro.toQuery());
+				} catch (Exception e1) {
+					insertList.add(erro);
+					connectToMysql();
 				}
 			}
 
@@ -176,19 +203,23 @@ public class MongoToMysql {
 					// Enviar erros do buffer para a tabela Erros
 					if (nErrosConsecutivosTemperatura < maximoErrosPermitidos) {
 						while (!waitingList.isEmpty()) {
+							Erro erro = new Erro(waitingList.remove(), "ERR05", id);
 							try {
-								mysqlSt.executeUpdate(new Erro(waitingList.remove(), "ERR05", id).toQuery());
+								mysqlSt.executeUpdate(erro.toQuery());
 							} catch (SQLException e) {
-								e.printStackTrace();
+								insertList.add(erro);
+								connectToMysql();
 							}
 						}
 					} else {
 						while (!waitingList.isEmpty()) {
+							MediçãoSensor medição = waitingList.remove();
 							try {
-								mysqlSP = mysqlConn.prepareCall(waitingList.remove().toQuerySP());
+								mysqlSP = mysqlConn.prepareCall(medição.toQuerySP());
 								mysqlSP.execute();
 							} catch (SQLException e) {
-								e.printStackTrace();
+								insertList.add(medição);
+								connectToMysql();
 							}
 						}
 					}
@@ -197,7 +228,8 @@ public class MongoToMysql {
 						mysqlSP = mysqlConn.prepareCall(tmp.toQuerySP());
 						mysqlSP.execute();
 					} catch (SQLException e) {
-						e.printStackTrace();
+						insertList.add(tmp);
+						connectToMysql();
 					}
 					nErrosConsecutivosTemperatura = 0;
 					oldTmp = newTmp;
@@ -220,19 +252,23 @@ public class MongoToMysql {
 					// Enviar erros do buffer para a tabela Erros
 					if (nErrosConsecutivosDeHumidade < maximoErrosPermitidos) {
 						while (!waitingList.isEmpty()) {
+							Erro erro = new Erro(waitingList.remove(), "ERR06", id);
 							try {
-								mysqlSt.executeUpdate(new Erro(waitingList.remove(), "ERR06", id).toQuery());
+								mysqlSt.executeUpdate(erro.toQuery());
 							} catch (SQLException e) {
-								e.printStackTrace();
+								insertList.add(erro);
+								connectToMysql();
 							}
 						}
 					} else {
 						while (!waitingList.isEmpty()) {
+							MediçãoSensor medição = waitingList.remove();
 							try {
-								mysqlSP = mysqlConn.prepareCall(waitingList.remove().toQuerySP());
+								mysqlSP = mysqlConn.prepareCall(medição.toQuerySP());
 								mysqlSP.execute();
 							} catch (SQLException e) {
-								e.printStackTrace();
+								insertList.add(medição);
+								connectToMysql();
 							}
 						}
 					}
@@ -240,7 +276,8 @@ public class MongoToMysql {
 						mysqlSP = mysqlConn.prepareCall(hum.toQuerySP());
 						mysqlSP.execute();
 					} catch (SQLException e) {
-						e.printStackTrace();
+						insertList.add(hum);
+						connectToMysql();
 					}
 					nErrosConsecutivosDeHumidade = 0;
 					oldHum = newHum;
@@ -258,15 +295,18 @@ public class MongoToMysql {
 					mysqlSP = mysqlConn.prepareCall(mov.toQuerySP());
 					mysqlSP.execute();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					insertList.add(mov);
+					connectToMysql();
 				}
 			} else {
 				mov = new MediçãoSensor(newMov, "mov", dat, tim, id);
+				Erro erro = new Erro(mov, "ERR03", id);
 				try {
-					mysqlSt.executeUpdate(new Erro(mov, "ERR03", id).toQuery());
+					mysqlSt.executeUpdate(erro.toQuery());
 					mysqlSP.execute();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					insertList.add(erro);
+					connectToMysql();
 				}
 			}
 			if (newLum >= 0.0) {
@@ -275,12 +315,14 @@ public class MongoToMysql {
 					mysqlSP = mysqlConn.prepareCall(lum.toQuerySP());
 					mysqlSP.execute();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					insertList.add(lum);
+					connectToMysql();
 				}
 			} else if (newLum != -1.0){
 				lum = new MediçãoSensor(newLum, "lum", dat, tim, id);
+				Erro erro = new Erro(lum, "ERR04", id);
 				try {
-					mysqlSt.executeUpdate(new Erro(lum, "ERR04", id).toQuery());
+					mysqlSt.executeUpdate(erro.toQuery());
 					mysqlSP.execute();
 				} catch (SQLException e) {
 					e.printStackTrace();
