@@ -43,7 +43,7 @@ public class BrokerToMongo implements MqttCallback {
 			mongo_database = p.getProperty("mongo_database");
 			mongo_readings_collection = p.getProperty("mongo_readings_collection");
 			mongo_error_collection = p.getProperty("mongo_error_collection");
-			
+
 		} catch (Exception e) {
 			System.out.println("Error reading CloudToMongo.ini file " + e);
 			JOptionPane.showMessageDialog(null, "The CloudToMongo.ini file wasn't found.", "CloudToMongo",
@@ -70,6 +70,8 @@ public class BrokerToMongo implements MqttCallback {
 		mongoClient = MongoClients.create(mongo_host);
 		mongoDatabase = mongoClient.getDatabase(mongo_database);
 		mongoReadingsCollection = mongoDatabase.getCollection(mongo_readings_collection);
+		mongoClient = MongoClients.create(mongo_host);
+		mongoDatabase = mongoClient.getDatabase(mongo_database);
 		mongoErrorCollection = mongoDatabase.getCollection(mongo_error_collection);
 	}
 
@@ -77,19 +79,29 @@ public class BrokerToMongo implements MqttCallback {
 	public void messageArrived(String topic, MqttMessage c) throws Exception {
 		try {
 			Document json = Document.parse(c.toString().replace("\", ", "\",\"").replace("\"\"", "\""));
-			System.out.println(c.toString().replace("\", ", "\",\"").replace("\"\"", "\""));
+			
+			Date date = new Date(System.currentTimeMillis());
+			SimpleDateFormat dateFormatter= new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat timeFormatter= new SimpleDateFormat("HH:");
+			String time = json.getString("tim");
+			String[] timeArray = time.split(":");
+			json.replace("tim", timeFormatter.format(date) + timeArray[1] + ":" + timeArray[2]);
+			json.replace("dat", dateFormatter.format(date));
+			System.out.println(json.toString());
+
 			mongoReadingsCollection.insertOne(json);
 		} catch (Exception e) {
 			SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = new Date(System.currentTimeMillis());
 
-			JSONObject obj = new JSONObject();
-			obj.put("erro", c.toString());
-			obj.put("timestamp", formatter.format(date));
-			
-			Document json = Document.parse(obj.toString());
-			mongoErrorCollection.insertOne(json);
-			System.out.println(obj.toString());
+			try {
+				Document obj = new Document("erro", c.toString().replace("{", "").replace("}", "").replace("\"", "").replace(":", " ")) ;
+				obj.put("timestamp", formatter.format(date));
+				mongoErrorCollection.insertOne(obj);
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+
 		}
 	}
 

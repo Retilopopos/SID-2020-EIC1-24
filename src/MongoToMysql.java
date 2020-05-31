@@ -55,7 +55,7 @@ public class MongoToMysql {
 	
 	Double variacaoValorErro;
 	
-	int maximoErrosPermitidos;
+	int maximoPotenciaisErros;
 	
 	//Counters
 	int nErrosConsecutivosTemperatura = 0;
@@ -68,7 +68,7 @@ public class MongoToMysql {
 
 	public void getSistemParameters() {
 		try {
-			String selectData = "SELECT LimiteTemperatura, LimiteHumidade, TemperaturaPerigo, HumidadePerigo, VariaçãoValorErro, MaximoErrosPermitidos FROM sistema";
+			String selectData = "SELECT LimiteTemperatura, LimiteHumidade, TemperaturaPerigo, HumidadePerigo, VariaçãoValorErro, MaximoPotenciaisErros FROM sistema";
 			erroData = mysqlConn.createStatement();
 			ResultSet rs = erroData.executeQuery(selectData);
 			while(rs.next()) {
@@ -77,7 +77,7 @@ public class MongoToMysql {
 				limiteHumidade = rs.getDouble("LimiteHumidade");
 				humidadePerigo = rs.getDouble("HumidadePerigo");
 				variacaoValorErro = rs.getDouble("VariaçãoValorErro");
-				maximoErrosPermitidos = rs.getInt("MaximoErrosPermitidos");				
+				maximoPotenciaisErros = rs.getInt("MaximoPotenciaisErros");				
 			}
 			rs.close();
 		} catch (SQLException e) {
@@ -197,11 +197,11 @@ public class MongoToMysql {
 				tmp = new MediçãoSensor(newTmp, "tmp", dat, tim, id);
 
 				Double variacao = Math.abs(1 - (Math.max(oldTmp, newTmp) / Math.min(oldTmp, newTmp)));
-				if ((oldTmp == -1.0 || variacao < variacaoValorErro)|| nErrosConsecutivosTemperatura >= maximoErrosPermitidos) {
+				if ((oldTmp == -1.0 || variacao < variacaoValorErro)|| nErrosConsecutivosTemperatura >= maximoPotenciaisErros) {
 
 					System.out.println(tmp);
 					// Enviar erros do buffer para a tabela Erros
-					if (nErrosConsecutivosTemperatura < maximoErrosPermitidos) {
+					if (nErrosConsecutivosTemperatura < maximoPotenciaisErros) {
 						while (!waitingList.isEmpty()) {
 							Erro erro = new Erro(waitingList.remove(), "ERR05", id);
 							try {
@@ -246,11 +246,11 @@ public class MongoToMysql {
 
 				Double variacao = Math.abs(1 - (Math.max(oldHum, newHum) / Math.min(oldHum, newHum)));
 				if ((oldHum == -1.0 || variacao < variacaoValorErro)
-						|| nErrosConsecutivosDeHumidade >= maximoErrosPermitidos) {
+						|| nErrosConsecutivosDeHumidade >= maximoPotenciaisErros) {
 					// Leitura correta, envio para tabela MedicaoSensor
 					System.out.println(hum);
 					// Enviar erros do buffer para a tabela Erros
-					if (nErrosConsecutivosDeHumidade < maximoErrosPermitidos) {
+					if (nErrosConsecutivosDeHumidade < maximoPotenciaisErros) {
 						while (!waitingList.isEmpty()) {
 							Erro erro = new Erro(waitingList.remove(), "ERR06", id);
 							try {
