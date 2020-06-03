@@ -13,9 +13,10 @@ public class MediçãoSensor {
 	MediçãoSensor(Double medição, String tipo, String data, String hora, String id) {
 		this.valor = medição;
 		this.tipo = TipoSensor.valueOf(TipoSensor.class, tipo);
+
 		int[] dataOg = Arrays.stream(data.split("/")).mapToInt(Integer::parseInt).toArray();
 		int[] horaOg = Arrays.stream(hora.split(":")).mapToInt(Integer::parseInt).toArray();
-		this.dataHora = new Timestamp(dataOg[2] - 1900, dataOg[1] - 1, dataOg[0], horaOg[0], horaOg[1], horaOg[2], 0)
+		this.dataHora = new Timestamp(dataOg[0] - 1900, dataOg[1] - 1, dataOg[2], horaOg[0], horaOg[1], horaOg[2], 0)
 				.toString().replace(".0", "");
 		this.id = id;
 	}
@@ -25,7 +26,7 @@ public class MediçãoSensor {
 		this.tipo = TipoSensor.valueOf(TipoSensor.class, tipo);
 		int[] dataOg = Arrays.stream(data.split("/")).mapToInt(Integer::parseInt).toArray();
 		int[] horaOg = Arrays.stream(hora.split(":")).mapToInt(Integer::parseInt).toArray();
-		this.dataHora = new Timestamp(dataOg[2] - 1900, dataOg[1] - 1, dataOg[0], horaOg[0], horaOg[1], horaOg[2], 0)
+		this.dataHora = new Timestamp(dataOg[0] - 1900, dataOg[1] - 1, dataOg[2], horaOg[0], horaOg[1], horaOg[2], 0)
 				.toString().replace(".0", "");
 		this.id = id;
 	}

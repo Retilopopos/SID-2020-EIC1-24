@@ -81,17 +81,19 @@ public class BrokerToMongo implements MqttCallback {
 			Document json = Document.parse(c.toString().replace("\", ", "\",\"").replace("\"\"", "\""));
 			
 			Date date = new Date(System.currentTimeMillis());
-			SimpleDateFormat dateFormatter= new SimpleDateFormat("yyyy-MM-dd");
+			System.out.println(date);
+			SimpleDateFormat dateFormatter= new SimpleDateFormat("yyyy/MM/dd");
 			SimpleDateFormat timeFormatter= new SimpleDateFormat("HH:");
 			String time = json.getString("tim");
 			String[] timeArray = time.split(":");
 			json.replace("tim", timeFormatter.format(date) + timeArray[1] + ":" + timeArray[2]);
 			json.replace("dat", dateFormatter.format(date));
+			System.out.println(dateFormatter.format(date));
 			System.out.println(json.toString());
 
 			mongoReadingsCollection.insertOne(json);
 		} catch (Exception e) {
-			SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			Date date = new Date(System.currentTimeMillis());
 
 			try {
